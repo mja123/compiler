@@ -9,20 +9,27 @@ import java.util.regex.Pattern;
 public class Identifier implements IToken {
     private final ETokenKey TOKEN_KEY_ID = ETokenKey.ID;
     private static final Pattern LETTERS_PATTERN = Pattern.compile("^[a-z]+$", Pattern.CASE_INSENSITIVE);
-    private static final Pattern ALPHA_NUMERIC_PATTERN = Pattern.compile("^[\\da-z]+$", Pattern.CASE_INSENSITIVE);
+    private static final Pattern ALPHA_NUMERIC_PATTERN = Pattern.compile("^[a-z][\\da-z]+$", Pattern.CASE_INSENSITIVE);
 
     private static boolean onlyLettersMatches(String target) {
         return LETTERS_PATTERN.matcher(target).matches();
     }
 
-    public static boolean onlyAlphaNumericMatches(String target) {
+    private static boolean onlyAlphaNumericMatches(String target) {
         return ALPHA_NUMERIC_PATTERN.matcher(target).matches();
+    }
+
+    public static Pattern getLettersPattern() {
+        return LETTERS_PATTERN;
+    }
+
+    public static Pattern getAlphaNumericPattern() {
+        return ALPHA_NUMERIC_PATTERN;
     }
 
     @Override
     public Boolean analyze(String value) {
-        return true;
-//        return onlyLettersMatches(value) || onlyAlphaNumericMatches(value);
+        return onlyLettersMatches(value) || onlyAlphaNumericMatches(value);
     }
 
     @Override
