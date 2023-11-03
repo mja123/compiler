@@ -1,7 +1,7 @@
-package tokens;
+package tokenGenerator.tokens;
 
-import common.ETokenKey;
-import common.IToken;
+import tokenGenerator.common.ETokenKey;
+import tokenGenerator.common.IToken;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -19,31 +19,14 @@ public class Identifier implements IToken {
         return ALPHA_NUMERIC_PATTERN.matcher(target).matches();
     }
 
-    public static Pattern getLettersPattern() {
-        return LETTERS_PATTERN;
-    }
-
-    public static Pattern getAlphaNumericPattern() {
-        return ALPHA_NUMERIC_PATTERN;
-    }
 
     @Override
     public Boolean analyze(String value) {
-        return onlyLettersMatches(value) || onlyAlphaNumericMatches(value);
+        return !Reserved.isReservedWord(value) && (onlyLettersMatches(value) || onlyAlphaNumericMatches(value));
     }
 
     @Override
     public Map<ETokenKey, String> generateToken(String value) {
         return Map.of(TOKEN_KEY_ID, value);
-    }
-
-
-
-    public static void main(String[] args) {
-        String bla = "";
-        Identifier id = new Identifier();
-//        System.out.println("Numbers " + id.onlyNumbersMatches(bla));
-        System.out.println("Letters " + id.onlyLettersMatches(bla));
-        System.out.println("AlphaNumeric " + id.onlyAlphaNumericMatches(bla));
     }
 }

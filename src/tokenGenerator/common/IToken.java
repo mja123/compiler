@@ -1,4 +1,4 @@
-package common;
+package tokenGenerator.common;
 
 import java.util.Map;
 

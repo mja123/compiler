@@ -1,4 +1,4 @@
-package Utils;
+package tokenGenerator.utils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

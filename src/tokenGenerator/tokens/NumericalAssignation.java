@@ -1,7 +1,7 @@
-package tokens;
+package tokenGenerator.tokens;
 
-import common.ETokenKey;
-import common.IToken;
+import tokenGenerator.common.ETokenKey;
+import tokenGenerator.common.IToken;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -16,7 +16,7 @@ public class NumericalAssignation implements IToken {
     }
 
     private static Pattern getAssignationPattern() {
-        String assignationPart = "\\s*=\\s*";
+        String assignationPart = "=";
         String identifierPart = "[\\da-z]+";
         String valuePart = "\\d+";
         return Pattern.compile(identifierPart + assignationPart + valuePart);

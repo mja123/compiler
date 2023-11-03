@@ -1,4 +1,4 @@
-package common;
+package tokenGenerator.common;
 
 public enum ETokenKey {
     NUM,
