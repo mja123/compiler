@@ -23,14 +23,9 @@ public class TokensEntryPoint {
 
     public static void generateToken() throws IOException {
         readText().forEach(line -> {
-            String[] lineSplit;
-            if (Reserved.isReservedWord(line.split("\\s")[0])) {
-                lineSplit = line.split("\\s");
-            } else {
-                lineSplit = line.split("\n");
-            }
-            Arrays.stream(lineSplit).forEach(w -> {
-                final String value = w.replace(" ","");
+            List<Map<ETokenKey, String>> tokensPerLine = new ArrayList<>();
+            Arrays.stream(line.split("\\s")).forEach(w -> {
+                final String value = w;
                 ReflectionUtils.findAllClassesUsingClassLoader(TOKENS_PACKAGE, TOKEN_INTERFACE).stream().filter(l -> {
                     try {
                         IToken token = instantiateCompilerClass(l);
@@ -40,16 +35,15 @@ public class TokensEntryPoint {
                         return false;
                     }
                 }).findFirst().ifPresent(f -> {
-                    List<Map<ETokenKey, String>> tokensPerLine = new ArrayList<>();
                     try {
                         IToken token = instantiateCompilerClass(f);
                         tokensPerLine.add(token.generateToken(value));
                     } catch (IllegalAccessException e) {
                         System.out.println("Problem with class " + f.getName() + " error: " + e.getMessage());
                     }
-                    totalTokens.add(tokensPerLine);
                 });
             });
+            totalTokens.add(tokensPerLine);
         });
     }
 

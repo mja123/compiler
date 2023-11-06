@@ -1,5 +1,5 @@
 package utils;
 
-public interface ICompiler<T> {
-    Boolean analyze(T value);
+public interface ICompiler {
+    Boolean analyze(String value);
 }

@@ -6,7 +6,7 @@ import lexicalAnalyzer.common.IToken;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class NumericalAssignation implements IToken {
+public class AssignationOperator implements IToken {
 
     private final ETokenKey TOKEN_KEY_ASSIGNATION = ETokenKey.ASSIGNATION_OP;
     private static final Pattern ASSIGNATION_PATTERN;
@@ -15,11 +15,8 @@ public class NumericalAssignation implements IToken {
         ASSIGNATION_PATTERN = getAssignationPattern();
     }
 
-    private static Pattern getAssignationPattern() {
-        String assignationPart = "=";
-        String identifierPart = "[\\da-z]+";
-        String valuePart = "\\d+";
-        return Pattern.compile(identifierPart + assignationPart + valuePart);
+    public static Pattern getAssignationPattern() {
+        return Pattern.compile("^=$");
     }
 
     @Override

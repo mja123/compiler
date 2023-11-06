@@ -37,7 +37,7 @@ public class ReflectionUtils {
         return null;
     }
 
-    public static <T extends ICompiler<?>> T instantiateCompilerClass(Class<?> targetClass) throws IllegalAccessException {
+    public static <T extends ICompiler> T instantiateCompilerClass(Class<?> targetClass) throws IllegalAccessException {
         Optional<Constructor<?>> defaultConstructor = Arrays.stream(targetClass.getConstructors()).
                 filter(c -> c.getParameterCount() == 0)
                 .findFirst();

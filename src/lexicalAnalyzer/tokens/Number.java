@@ -9,7 +9,15 @@ import java.util.regex.Pattern;
 public class Number implements IToken {
 
     private final ETokenKey TOKEN_KEY_NUM = ETokenKey.NUM;
-    private static final Pattern NUMBERS_PATTERN = Pattern.compile("^\\d+$");
+    private static final Pattern NUMBERS_PATTERN;
+
+    static {
+        NUMBERS_PATTERN = getNumbersPattern();
+    }
+
+    public static Pattern getNumbersPattern() {
+        return Pattern.compile("^\\d+$");
+    }
 
     @Override
     public Boolean analyze(String value) {
