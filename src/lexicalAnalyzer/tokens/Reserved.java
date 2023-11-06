@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Reserved implements IToken {
 
-    private final ETokenKey TOKEN_KEY_RESERVED = ETokenKey.RESERVED;
+    private final ETokenKey RESERVED_TOKEN_KEY = ETokenKey.RESERVED;
     private static final EReservedWords[] RESERVED_WORDS = EReservedWords.values();
 
     public static boolean isReservedWord(String value) {
@@ -17,9 +17,11 @@ public class Reserved implements IToken {
 
     @Override
     public Map<ETokenKey, String> generateToken(String value) {
-        return Map.of(TOKEN_KEY_RESERVED, value);
+        return Map.of(RESERVED_TOKEN_KEY, value);
     }
 
+
+    // Checking if value is a reserved word
     @Override
     public Boolean analyze(String value) {
         return isReservedWord(value);

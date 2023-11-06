@@ -18,15 +18,32 @@ public class TokensEntryPoint {
     final static String TOKEN_INTERFACE = "IToken";
     final static List<List<Map<ETokenKey, String>>> totalTokens = new LinkedList<>();
 
+    static {
+        try {
+            // Generating token as soon as class is loaded
+            generateToken();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Singleton pattern
     private TokensEntryPoint() {}
 
+    /**
+     * Generating tokens per line in target file
+     * @throws IOException throws if there are issues reading lines
+     */
     public static void generateToken() throws IOException {
         readText().forEach(line -> {
             List<Map<ETokenKey, String>> tokensPerLine = new ArrayList<>();
+            // Reading word by word per line
             Arrays.stream(line.split("\\s")).forEach(w -> {
                 final String value = w;
-                ReflectionUtils.findAllClassesUsingClassLoader(TOKENS_PACKAGE, TOKEN_INTERFACE).stream().filter(l -> {
+                // Finding classes that are implementing TOKEN_INTERFACE in TOKENS_PACKAGES
+                ReflectionUtils.findClasses(TOKENS_PACKAGE, TOKEN_INTERFACE).stream().filter(l -> {
                     try {
+                        // Instantiating classes to analyze if current key matches with class pattern
                         IToken token = instantiateCompilerClass(l);
                         return token.analyze(value);
                     } catch (IllegalAccessException e) {
@@ -35,6 +52,7 @@ public class TokensEntryPoint {
                     }
                 }).findFirst().ifPresent(f -> {
                     try {
+                        // Generating token from class matched
                         IToken token = instantiateCompilerClass(f);
                         tokensPerLine.add(token.generateToken(value));
                     } catch (IllegalAccessException e) {
@@ -46,6 +64,11 @@ public class TokensEntryPoint {
         });
     }
 
+    /**
+     * Reading target file
+     * @return lines in file
+     * @throws IOException throw if file is not found
+     */
     private static List<String> readText() throws IOException {
         try(BufferedReader reader = new BufferedReader(new FileReader(INPUT_FILE_PATH))) {
             return reader.lines().collect(Collectors.toList());
@@ -57,8 +80,11 @@ public class TokensEntryPoint {
     }
 
 
-
+    /**
+     * Getting total tokens
+     * @return tokens generated in file
+     */
     public static List<List<Map<ETokenKey, String>>> getTotalTokens() {
-        return  totalTokens;
+        return totalTokens;
     }
 }

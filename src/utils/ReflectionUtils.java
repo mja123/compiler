@@ -11,7 +11,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ReflectionUtils {
-    public static Set<Class<?>> findAllClassesUsingClassLoader(String packageName, String interfaceName) {
+    /**
+     * Collecting all classes in packageName that implements interfaceName
+     * @param packageName target package to check classes
+     * @param interfaceName target interface implemented by classes in packageName
+     * @return Classes found
+     */
+    public static Set<Class<?>> findClasses(String packageName, String interfaceName) {
         InputStream stream = ClassLoader.getSystemClassLoader()
                 .getResourceAsStream(packageName.replaceAll("[.]", "/"));
         assert stream != null;
@@ -26,17 +32,30 @@ public class ReflectionUtils {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Parsing class name
+     * @param className full class name
+     * @param packageName class package
+     * @return parsed class
+     */
     private static Class<?> getClass(String className, String packageName) {
         try {
             return Class.forName(packageName + "."
                     + className.substring(0, className.lastIndexOf('.')));
 
         } catch (ClassNotFoundException e) {
-            // handle the exception
+            System.out.println("We couldn't access to " + className + ": error " + e.getMessage());
         }
         return null;
     }
 
+    /**
+     * Instantiating targetClass
+     * @param targetClass class to be instantiated
+     * @return new T object
+     * @param <T> Using to ICompiler hierarchy
+     * @throws IllegalAccessException throw if there is no default constructor
+     */
     public static <T extends ICompiler> T instantiateCompilerClass(Class<?> targetClass) throws IllegalAccessException {
         Optional<Constructor<?>> defaultConstructor = Arrays.stream(targetClass.getConstructors()).
                 filter(c -> c.getParameterCount() == 0)

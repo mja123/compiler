@@ -18,6 +18,7 @@ public class Expression implements ITokenAnalyze {
         this.EXPRESSION_TENSE_KEY = ETense.EXPRESSION;
     }
 
+    // [[ID,NUM,OPERATION] OPERATOR [ID,NUM,OPERATION]]+
     private Pattern getEXPRESSION_PATTERN() {
         String operationToken = ETokenKey.CONDITIONAL_OP.toString();
         String operatorPattern = "(" + ETokenKey.ID + "|" + ETokenKey.NUM + "|" + ETense.OPERATION + ")";

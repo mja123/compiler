@@ -7,14 +7,14 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public class MathematicalOperator implements IToken {
-    private final ETokenKey TOKEN_KEY_MATH_OP = ETokenKey.MATHEMATICAL_OP;
-    private static final Pattern MATH_OP_PATTERN;
+    private final ETokenKey MATH_OP_TOKEN_KEY = ETokenKey.MATHEMATICAL_OP;
+    private final Pattern MATH_OP_PATTERN;
 
-    static {
+    public MathematicalOperator() {
         MATH_OP_PATTERN = getMathOpPattern();
     }
 
-    public static Pattern getMathOpPattern() {
+    public Pattern getMathOpPattern() {
         return Pattern.compile("^[-+/*]$");
     }
 
@@ -25,7 +25,7 @@ public class MathematicalOperator implements IToken {
 
     @Override
     public Map<ETokenKey, String> generateToken(String value) {
-        return Map.of(TOKEN_KEY_MATH_OP, value);
+        return Map.of(MATH_OP_TOKEN_KEY, value);
     }
 }
 

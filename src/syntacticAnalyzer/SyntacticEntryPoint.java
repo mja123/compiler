@@ -6,7 +6,6 @@ import syntacticAnalyzer.common.ETense;
 import syntacticAnalyzer.common.ITokenAnalyze;
 import utils.ReflectionUtils;
 
-import java.io.IOException;
 import java.util.*;
 
 import static utils.ReflectionUtils.instantiateCompilerClass;
@@ -21,16 +20,14 @@ public class SyntacticEntryPoint {
     private SyntacticEntryPoint() {}
 
     static {
-        try {
-            TokensEntryPoint.generateToken();
-            TOKENS = TokensEntryPoint.getTotalTokens();
-        } catch (IOException e) {
-            throw new RuntimeException("We couldn't access to tokens");
-        }
+        TOKENS = TokensEntryPoint.getTotalTokens();
     }
 
-
+    /**
+     * Generating tenses per tokens in each line
+     */
     private static void generateTenses() {
+        // Join all keys and values in the line in one string
         TOKENS.forEach(line -> {
             StringBuilder keys = new StringBuilder();
             StringBuilder values = new StringBuilder();
@@ -44,8 +41,10 @@ public class SyntacticEntryPoint {
             });
             keys.deleteCharAt(keys.length() - 1);
             values.deleteCharAt(values.length() - 1);
-            ReflectionUtils.findAllClassesUsingClassLoader(TENSES_PACKAGE, SYNTACTIC_INTERFACE).stream().filter(t -> {
+            // Finding classes that are implementing SYNTACTIC_INTERFACE in TENSES_PACKAGES
+            ReflectionUtils.findClasses(TENSES_PACKAGE, SYNTACTIC_INTERFACE).stream().filter(t -> {
                 try {
+                    // Instantiating classes to analyze if current key matches with class pattern
                     ITokenAnalyze token = instantiateCompilerClass(t);
                     return token.analyze(keys.toString());
                 } catch (IllegalAccessException e) {
@@ -58,6 +57,7 @@ public class SyntacticEntryPoint {
                     ITokenAnalyze token = instantiateCompilerClass(f);
                     List<String> keysList = Arrays.stream(keys.toString().split("\\s")).toList();
                     List<String> valuesList = Arrays.stream(values.toString().split("\\s")).toList();
+                    // Generating tense from class matched
                     tense = token.generateTense(keysList, valuesList);
                 } catch (IllegalAccessException e) {
                     System.out.println("Problem with class " + f.getName() + " error: " + e.getMessage());
@@ -68,7 +68,9 @@ public class SyntacticEntryPoint {
         });
     }
 
-
+    /**
+     * Checking tokens generated from file
+     */
     private static void readTokens() {
         int counter = 0;
         for (List<Map<ETokenKey, String>> line : TOKENS) {
@@ -76,7 +78,6 @@ public class SyntacticEntryPoint {
             line.forEach(f -> f.entrySet().forEach(System.out::println));
         }
     }
-
 
     public static void main(String[] args) {
 //        readTokens();

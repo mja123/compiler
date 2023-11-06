@@ -20,6 +20,7 @@ public class Operation implements ITokenAnalyze {
     }
 
 
+    // [ID,NUM] MATH_OP [ID,NUM]
     public static Pattern getOperationPattern() {
         String operatorPattern = "(" + ETokenKey.ID + "|" +ETokenKey.NUM + ")";
         String mathToken = ETokenKey.MATHEMATICAL_OP.toString();

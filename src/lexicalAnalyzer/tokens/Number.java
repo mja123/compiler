@@ -8,14 +8,14 @@ import java.util.regex.Pattern;
 
 public class Number implements IToken {
 
-    private final ETokenKey TOKEN_KEY_NUM = ETokenKey.NUM;
-    private static final Pattern NUMBERS_PATTERN;
+    private final ETokenKey NUM_TOKEN_KEY = ETokenKey.NUM;
+    private final Pattern NUMBERS_PATTERN;
 
-    static {
+    public Number() {
         NUMBERS_PATTERN = getNumbersPattern();
     }
 
-    public static Pattern getNumbersPattern() {
+    public Pattern getNumbersPattern() {
         return Pattern.compile("^\\d+$");
     }
 
@@ -26,6 +26,6 @@ public class Number implements IToken {
 
     @Override
     public Map<ETokenKey, String> generateToken(String value) {
-        return Map.of(TOKEN_KEY_NUM, value);
+        return Map.of(NUM_TOKEN_KEY, value);
     }
 }

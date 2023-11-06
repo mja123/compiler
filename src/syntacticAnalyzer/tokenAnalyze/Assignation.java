@@ -18,6 +18,7 @@ public class Assignation implements ITokenAnalyze {
         this.ASSIGNATION_TENSE_KEY = ETense.ASSIGNATION;
     }
 
+    // ID = [ID,NUM,OPERATION]
     private Pattern getASSIGNATION_PATTERN() {
         String identifierToken = ETokenKey.ID.toString();
         String assignationToken = ETokenKey.ASSIGNATION_OP.toString();

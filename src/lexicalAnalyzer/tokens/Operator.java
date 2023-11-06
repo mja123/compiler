@@ -9,8 +9,9 @@ import java.util.Map;
 public class Operator implements IToken {
 
     private final EOperator[] OPERATORS = EOperator.values();
-    private final ETokenKey TOKEN_KEY_OPERATOR =  ETokenKey.CONDITIONAL_OP;
+    private final ETokenKey OPERATOR_TOKEN_KEY =  ETokenKey.CONDITIONAL_OP;
 
+    // Checking if value is an operator
     @Override
     public Boolean analyze(String value) {
         return Arrays.stream(OPERATORS).anyMatch(o -> value.contains(o.getValue()));
@@ -18,7 +19,7 @@ public class Operator implements IToken {
 
     @Override
     public Map<ETokenKey, String> generateToken(String value) {
-        return Map.of(TOKEN_KEY_OPERATOR, value);
+        return Map.of(OPERATOR_TOKEN_KEY, value);
     }
 
     private enum EOperator {
