@@ -1,9 +1,9 @@
-package tokenGenerator;
+package lexicalAnalyzer;
 
-import tokenGenerator.tokens.Reserved;
-import tokenGenerator.utils.ReflectionUtils;
-import tokenGenerator.common.ETokenKey;
-import tokenGenerator.common.IToken;
+import lexicalAnalyzer.tokens.Reserved;
+import utils.ReflectionUtils;
+import lexicalAnalyzer.common.ETokenKey;
+import lexicalAnalyzer.common.IToken;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,18 +12,19 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static utils.ReflectionUtils.instantiateTokenClass;
 
 public class TokensEntryPoint {
-    final static String INPUT_FILE_PATH = System.getProperty("user.dir")+"/src/tokenGenerator/resources/InputValues.txt";
-    final static String TOKENS_PACKAGE = "tokenGenerator.tokens";
+    final static String INPUT_FILE_PATH = System.getProperty("user.dir")+"/src/lexicalAnalyzer/resources/InputValues.txt";
+    final static String TOKENS_PACKAGE = "lexicalAnalyzer.tokens";
+    final static String TOKEN_INTERFACE = "IToken";
     final static List<List<Map<ETokenKey, String>>> totalTokens = new LinkedList<>();
 
     private TokensEntryPoint() {}
 
     public static void generateToken() throws IOException {
         readText().forEach(line -> {
-            List<Map<ETokenKey, String>> tokensPerLine = new ArrayList<>();
             String[] lineSplit;
             if (Reserved.isReservedWord(line.split("\\s")[0])) {
                 lineSplit = line.split("\\s");
@@ -32,7 +33,7 @@ public class TokensEntryPoint {
             }
             Arrays.stream(lineSplit).forEach(w -> {
                 final String value = w.replace(" ","");
-                ReflectionUtils.findAllClassesUsingClassLoader(TOKENS_PACKAGE).stream().filter(l -> {
+                ReflectionUtils.findAllClassesUsingClassLoader(TOKENS_PACKAGE, TOKEN_INTERFACE).stream().filter(l -> {
                     try {
                         IToken token = instantiateTokenClass(l);
                         return token.analyze(value);
@@ -41,14 +42,16 @@ public class TokensEntryPoint {
                         return false;
                     }
                 }).findFirst().ifPresent(f -> {
+                    List<Map<ETokenKey, String>> tokensPerLine = new ArrayList<>();
                     try {
-                        tokensPerLine.add(instantiateTokenClass(f).generateToken(value));
+                        IToken token = instantiateTokenClass(f);
+                        tokensPerLine.add(token.generateToken(value));
                     } catch (IllegalAccessException e) {
                         System.out.println("Problem with class " + f.getName() + " error: " + e.getMessage());
                     }
+                    totalTokens.add(tokensPerLine);
                 });
             });
-            if (!tokensPerLine.isEmpty()) totalTokens.add(tokensPerLine);
         });
     }
 
@@ -62,20 +65,6 @@ public class TokensEntryPoint {
         }
     }
 
-    private static IToken instantiateTokenClass(Class<?> targetClass) throws IllegalAccessException {
-        Optional<Constructor<?>> defaultConstructor = Arrays.stream(targetClass.getConstructors()).
-                filter(c -> c.getParameterCount() == 0)
-                .findFirst();
-
-        if (defaultConstructor.isPresent()) {
-            try {
-                return (IToken) defaultConstructor.get().newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                System.out.println("We couldn't create a new instance of " + targetClass.getName());
-            }
-        }
-        throw new IllegalAccessException("Default constructor is not present");
-    }
 
 
     public static List<List<Map<ETokenKey, String>>> getTotalTokens() {

@@ -1,7 +1,7 @@
-package tokenGenerator.tokens;
+package lexicalAnalyzer.tokens;
 
-import tokenGenerator.common.ETokenKey;
-import tokenGenerator.common.IToken;
+import lexicalAnalyzer.common.ETokenKey;
+import lexicalAnalyzer.common.IToken;
 
 import java.util.Map;
 import java.util.regex.Pattern;
