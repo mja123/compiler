@@ -9,7 +9,7 @@ import utils.ReflectionUtils;
 import java.io.IOException;
 import java.util.*;
 
-import static utils.ReflectionUtils.instantiateTokenClass;
+import static utils.ReflectionUtils.instantiateCompilerClass;
 
 public class SyntacticEntryPoint {
 
@@ -33,7 +33,7 @@ public class SyntacticEntryPoint {
             line.forEach(l ->
                 ReflectionUtils.findAllClassesUsingClassLoader(TENSES_PACKAGE, SYNTACTIC_INTERFACE).stream().filter(t -> {
                     try {
-                        ITokenAnalyze token = instantiateTokenClass(t);
+                        ITokenAnalyze token = instantiateCompilerClass(t);
                         return token.analyze(l.keySet().stream().findFirst().get());
                     } catch (IllegalAccessException e) {
                         System.out.println("Problem with class " + t.getName() + " error: " + e.getMessage());
@@ -42,7 +42,7 @@ public class SyntacticEntryPoint {
                 }).findFirst().ifPresent(f -> {
                     Map<ETense, List<String>> tense = null;
                     try {
-                        ITokenAnalyze token = instantiateTokenClass(f);
+                        ITokenAnalyze token = instantiateCompilerClass(f);
                         tense = token.generateTense(line);
                     } catch (IllegalAccessException e) {
                         System.out.println("Problem with class " + f.getName() + " error: " + e.getMessage());

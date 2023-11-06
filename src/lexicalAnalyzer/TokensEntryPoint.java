@@ -8,12 +8,10 @@ import lexicalAnalyzer.common.IToken;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static utils.ReflectionUtils.instantiateTokenClass;
+import static utils.ReflectionUtils.instantiateCompilerClass;
 
 public class TokensEntryPoint {
     final static String INPUT_FILE_PATH = System.getProperty("user.dir")+"/src/lexicalAnalyzer/resources/InputValues.txt";
@@ -35,7 +33,7 @@ public class TokensEntryPoint {
                 final String value = w.replace(" ","");
                 ReflectionUtils.findAllClassesUsingClassLoader(TOKENS_PACKAGE, TOKEN_INTERFACE).stream().filter(l -> {
                     try {
-                        IToken token = instantiateTokenClass(l);
+                        IToken token = instantiateCompilerClass(l);
                         return token.analyze(value);
                     } catch (IllegalAccessException e) {
                         System.out.println("Problem with class " + l.getName() + " error: " + e.getMessage());
@@ -44,7 +42,7 @@ public class TokensEntryPoint {
                 }).findFirst().ifPresent(f -> {
                     List<Map<ETokenKey, String>> tokensPerLine = new ArrayList<>();
                     try {
-                        IToken token = instantiateTokenClass(f);
+                        IToken token = instantiateCompilerClass(f);
                         tokensPerLine.add(token.generateToken(value));
                     } catch (IllegalAccessException e) {
                         System.out.println("Problem with class " + f.getName() + " error: " + e.getMessage());
