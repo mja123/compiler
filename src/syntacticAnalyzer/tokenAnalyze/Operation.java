@@ -21,11 +21,9 @@ public class Operation implements ITokenAnalyze {
 
 
     public static Pattern getOperationPattern() {
-//        Pattern operatorPattern = Pattern.compile("[" + ETokenKey.ID + ETokenKey.NUM + "]");
-        Pattern operatorPattern = Pattern.compile(ETokenKey.ID.toString());
-        Pattern mathOperator = Pattern.compile(ETokenKey.MATHEMATICAL_OP.toString());
-        return Pattern.compile("^"+ ETokenKey.NUM + ETokenKey.MATHEMATICAL_OP + ETokenKey.NUM + "$");
-//        return Pattern.compile(operatorPattern.toString() +  mathOperator.toString() + operatorPattern.toString());
+        String operatorPattern = "(" + ETokenKey.ID + "|" +ETokenKey.NUM + ")";
+        String mathToken = ETokenKey.MATHEMATICAL_OP.toString();
+        return Pattern.compile("^" + operatorPattern +  mathToken + operatorPattern + "$");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package lexicalAnalyzer;
 
-import lexicalAnalyzer.tokens.Reserved;
+import utils.IConstants;
 import utils.ReflectionUtils;
 import lexicalAnalyzer.common.ETokenKey;
 import lexicalAnalyzer.common.IToken;
