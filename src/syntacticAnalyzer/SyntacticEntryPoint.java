@@ -4,12 +4,10 @@ import lexicalAnalyzer.TokensEntryPoint;
 import lexicalAnalyzer.common.ETokenKey;
 import syntacticAnalyzer.common.ETense;
 import syntacticAnalyzer.common.ITokenAnalyze;
-import utils.IConstants;
 import utils.ReflectionUtils;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static utils.ReflectionUtils.instantiateCompilerClass;
 
@@ -81,9 +79,9 @@ public class SyntacticEntryPoint {
 
 
     public static void main(String[] args) {
-        readTokens();
+//        readTokens();
         generateTenses();
         totalTenses.forEach(t -> t.entrySet().forEach(System.out::println));
-        System.out.println(totalTenses.size());
+//        System.out.println(totalTenses.size());
     }
 }
